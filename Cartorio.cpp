@@ -3,76 +3,107 @@
 #include <locale.h>    // setlocale()
 #include <string.h>    // strcpy()
 
+int repetir() {
+    int op;
+    printf("\n1 - Fazer novamente\n");
+    printf("0 - Voltar ao menu\n");
+    printf("Opcao: ");
+    scanf("%d", &op);
+    return op;
+}
+
 void registro() {
 
-    char arquivo[40], cpf[40], nome[40], sobrenome[40], cargo[40];
+    int opcao;
 
-    printf("Digite o CPF: ");
-    scanf("%39s", cpf); // Limita tamanho para evitar estouro de memória
+    do {
+        char arquivo[40], cpf[40], nome[40], sobrenome[40], cargo[40];
 
-    strcpy(arquivo, cpf); // Copia CPF para o nome do arquivo
+        system("cls");
 
-    FILE *file = fopen(arquivo, "w"); // Cria o arquivo com o CPF
-    if(file == NULL){
-        printf("Erro ao criar o arquivo!\n");
-        system("pause");
-        return;
-    }
+        printf("Digite o CPF: ");
+        scanf("%39s", cpf);
 
-    printf("Digite o nome: ");
-    scanf("%39s", nome);
-    printf("Digite o sobrenome: ");
-    scanf("%39s", sobrenome);
-    printf("Digite o cargo: ");
-    scanf("%39s", cargo);
+        strcpy(arquivo, cpf);
 
-    // Salva todos os dados em formato CSV
-    fprintf(file, "%s,%s,%s,%s", cpf, nome, sobrenome, cargo);
-    fclose(file);
+        FILE *file = fopen(arquivo, "w");
+        if(file == NULL){
+            printf("Erro ao criar o arquivo!\n");
+            system("pause");
+            return;
+        }
 
-    printf("\nUsuário cadastrado com sucesso!\n");
-    system("pause");
+        printf("Digite o nome: ");
+        scanf("%39s", nome);
+        printf("Digite o sobrenome: ");
+        scanf("%39s", sobrenome);
+        printf("Digite o cargo: ");
+        scanf("%39s", cargo);
+
+        fprintf(file, "%s,%s,%s,%s", cpf, nome, sobrenome, cargo);
+        fclose(file);
+
+        printf("\nUsuário cadastrado com sucesso!\n");
+
+        opcao = repetir();
+
+    } while(opcao == 1);
 }
 
 void consulta() {
 
-    char cpf[40], conteudo[200];
+    int opcao;
 
-    printf("Digite o CPF a ser consultado: ");
-    scanf("%39s", cpf);
+    do {
+        char cpf[40], conteudo[200];
 
-    FILE *file = fopen(cpf, "r"); // Abre o arquivo
-    if(file == NULL){
-        printf("Usuário não encontrado!\n");
-        system("pause");
-        return;
-    }
+        system("cls");
 
-    fgets(conteudo, 200, file); // Lê a linha do arquivo
-    printf("\nInformações do usuário:\n%s\n", conteudo);
+        printf("Digite o CPF a ser consultado: ");
+        scanf("%39s", cpf);
 
-    fclose(file);
-    system("pause");
+        FILE *file = fopen(cpf, "r");
+        if(file == NULL){
+            printf("Usuário não encontrado!\n");
+            opcao = repetir();
+            continue;
+        }
+
+        fgets(conteudo, 200, file);
+        printf("\nInformações do usuário:\n%s\n", conteudo);
+        fclose(file);
+
+        opcao = repetir();
+
+    } while(opcao == 1);
 }
 
 void deletar() {
 
-    char cpf[40];
+    int opcao;
 
-    printf("Digite o CPF a ser deletado: ");
-    scanf("%39s", cpf);
+    do {
+        char cpf[40];
 
-    FILE *file = fopen(cpf, "r"); // Testa se existe
-    if(file == NULL){
-        printf("Usuário não encontrado!\n");
-        system("pause");
-        return;
-    }
-    fclose(file);
+        system("cls");
 
-    remove(cpf); // Apaga o arquivo
-    printf("Usuário deletado com sucesso!\n");
-    system("pause");
+        printf("Digite o CPF a ser deletado: ");
+        scanf("%39s", cpf);
+
+        FILE *file = fopen(cpf, "r");
+        if(file == NULL){
+            printf("Usuário não encontrado!\n");
+            opcao = repetir();
+            continue;
+        }
+        fclose(file);
+
+        remove(cpf);
+        printf("Usuário deletado com sucesso!\n");
+
+        opcao = repetir();
+
+    } while(opcao == 1);
 }
 
 int main() {
